@@ -1,3 +1,4 @@
 selenium
-speech_recognition
+SpeechRecognition
 wget
+pychalk
