@@ -1,4 +1,5 @@
 import os
+import glob
 from selenium import webdriver
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from selenium.webdriver.chrome.options import Options as ChromeOptions
@@ -6,6 +7,7 @@ from selenium.webdriver.firefox.options import Options as FirefoxOptions
 import log
 import credential_gen
 import time
+import arkose_labs
 
 user_to_follow = open('user.txt', 'r').read()
 
@@ -88,8 +90,8 @@ submit_button = browser.find_element_by_xpath('/html/body/div[3]/div/div/div/div
 submit_button.click()
 log.good('Submitted sign up form.')
 
-log.info("Waiting 3 seconds...")
-time.sleep(3)
+log.info("Waiting 5 seconds...")
+time.sleep(5)
 
 def remind_later():
     # Remind to verify later
@@ -99,10 +101,27 @@ def remind_later():
     log.log_account(username, email, password)
     log.good("Logged account...")
 
+def complete_captcha():
+    browser.switch_to.frame(browser.find_element_by_xpath('/html/body/div[1]/div[2]/div[1]/iframe'))
+    audio_captcha_button = browser.find_element_by_xpath('//*[@id="fc_meta_audio_btn"]')
+    audio_captcha_button.click()
+    time.sleep(.5)
+    audio_download = browser.find_element_by_xpath('//*[@id="audio_download"]')
+    audio_download.click()
+    time.sleep(1.5)
+    # audio_url = 'https://client-api.arkoselabs.com' + browser.find_element_by_xpath('//*[@id="audio_download"]').href
+    list_of_files = glob.glob('/Users/ismaeel/Downloads/*.wav')
+    latest_file = max(list_of_files, key=os.path.getctime)
+    audio_url = '/Users/ismaeel/Downloads/' + latest_file
+    log.info(f'Captcha audio url: ${audio_url}')
+    code = arkose_labs.recognize_audio(audio_url)
+    browser.switch_to.default_content()
+
 try:
     remind_later()
 except:
-    # Do arkose labs captcha
+    time.sleep(2)
+    complete_captcha()
     time.sleep(3)
     remind_later()
 
@@ -113,6 +132,6 @@ browser.get(f'https://twitch.tv/{user_to_follow}')
 time.sleep(1)
 
 # Follow
-follow_button = browser.find_element_by_xpath('//*[@id="root"]/div/div[2]/div[2]/main/div[2]/div[3]/div/div/div[1]/div[1]/div[2]/div/div[2]/div[1]/div[2]/div[1]/div/div/div/div/div[1]/div/div/div/div/button')
+follow_button = browser.find_element_by_xpath('/html/body/div[1]/div/div[2]/div[2]/main/div[2]/div[3]/div/div/div[1]/div[1]/div[2]/div/div[2]/div[1]/div[2]/div[1]/div/div/div/div/div[1]/div/div/div/div/button')
 follow_button.click()
 log.good(f"Followed {user_to_follow}!")
