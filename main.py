@@ -102,7 +102,7 @@ def remind_later():
 try:
     remind_later()
 except:
-    # Do captcha
+    # Do arkose labs captcha
     time.sleep(3)
     remind_later()
 
