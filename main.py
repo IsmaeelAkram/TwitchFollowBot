@@ -91,12 +91,20 @@ log.good('Submitted sign up form.')
 log.info("Waiting 3 seconds...")
 time.sleep(3)
 
-# Remind to verify later
-remind_later = browser.find_element_by_xpath('/html/body/div[3]/div/div/div/div/div/div[1]/div/div/div/div/div[3]/div[2]/div/button')
-remind_later.click()
-log.good('Skipped email verification...')
-log.log_account(username, email, password)
-log.good("Logged account...")
+def remind_later():
+    # Remind to verify later
+    remind_later = browser.find_element_by_xpath('/html/body/div[3]/div/div/div/div/div/div[1]/div/div/div/div/div[3]/div[2]/div/button')
+    remind_later.click()
+    log.good('Skipped email verification...')
+    log.log_account(username, email, password)
+    log.good("Logged account...")
+
+try:
+    remind_later()
+except:
+    # Do captcha
+    time.sleep(3)
+    remind_later()
 
 log.info("Waiting 3 seconds...")
 time.sleep(3)
