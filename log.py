@@ -11,3 +11,7 @@ def warning(x):
 
 def info(x):
     print(f"[📣] {chalk.blue(x)}")
+
+def log_account(username, email, password):
+    with open('accounts.txt', 'a') as f:
+        f.write(f"{email}:{username}:{password}\n")

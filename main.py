@@ -81,7 +81,7 @@ email_field.send_keys(email)
 log.good(f'Filled in email: {email}')
 
 log.info('Waiting for submission verification...')
-time.sleep(2)
+time.sleep(5)
 
 # Submit form
 submit_button = browser.find_element_by_xpath('/html/body/div[3]/div/div/div/div/div/div[1]/div/div/div[3]/form/div/div[5]/button')
@@ -95,6 +95,8 @@ time.sleep(3)
 remind_later = browser.find_element_by_xpath('/html/body/div[3]/div/div/div/div/div/div[1]/div/div/div/div/div[3]/div[2]/div/button')
 remind_later.click()
 log.good('Skipped email verification...')
+log.log_account(username, email, password)
+log.good("Logged account...")
 
 log.info("Waiting 3 seconds...")
 time.sleep(3)
