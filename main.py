@@ -13,7 +13,6 @@ user_to_follow = open('user.txt', 'r').read()
 
 tor = False
 
-
 def run():
     if tor:
         log.info('Getting Tor binary...')
